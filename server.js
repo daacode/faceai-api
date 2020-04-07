@@ -41,12 +41,12 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
-  bcrypt.compare("bacon", hash, function(err, res) {
+  /* bcrypt.compare("bacon", hash, function(err, res) {
     // res == true
   });
   bcrypt.compare("veggies", hash, function(err, res) {
     // res = false
-  });
+  }); */
   if (
     req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password
@@ -66,7 +66,6 @@ app.post("/register", (req, res) => {
     id: "123",
     name: name,
     email: email,
-    password: password,
     enteries: 0,
     joined: new Date()
   });
