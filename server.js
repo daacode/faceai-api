@@ -4,17 +4,15 @@ const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const knex = require("knex");
 
-const postgres = knex({
+const db = knex({
   client: "pg",
   connection: {
     host: "127.0.0.1",
-    user: " postgres",
-    password: "",
-    database: "smartbrain"
-  }
+    user: "postgres",
+    password: "david1995",
+    database: "smartbrain",
+  },
 });
-
-console.log(postgres.select("*").from("users"));
 
 const app = express();
 
@@ -26,7 +24,7 @@ const database = {
       email: "john@gmail.com",
       password: "cookies",
       entries: 0,
-      joined: new Date()
+      joined: new Date(),
     },
     {
       id: "124",
@@ -34,16 +32,16 @@ const database = {
       email: "sally@gmail.com",
       password: "bananas",
       entries: 0,
-      joined: new Date()
-    }
+      joined: new Date(),
+    },
   ],
   login: [
     {
       id: "987",
       hash: "",
-      email: "john@gmail.com"
-    }
-  ]
+      email: "john@gmail.com",
+    },
+  ],
 };
 
 app.use(bodyParser.json());
@@ -72,7 +70,7 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
-  bcrypt.hash(password, null, null, function(err, hash) {
+  bcrypt.hash(password, null, null, function (err, hash) {
     console.log(hash);
   });
   database.users.push({
@@ -80,7 +78,7 @@ app.post("/register", (req, res) => {
     name: name,
     email: email,
     enteries: 0,
-    joined: new Date()
+    joined: new Date(),
   });
   res.json(database.users[database.users.length - 1]);
 });
@@ -88,7 +86,7 @@ app.post("/register", (req, res) => {
 app.get("/profile/:id", (req, res) => {
   const { id } = req.params;
   let found = false;
-  database.users.forEach(user => {
+  database.users.forEach((user) => {
     if (user.id === id) {
       found = true;
       return res.json(user);
@@ -102,7 +100,7 @@ app.get("/profile/:id", (req, res) => {
 app.post("/image", (req, res) => {
   const { id } = req.body;
   let found = false;
-  database.users.forEach(user => {
+  database.users.forEach((user) => {
     if (user.id === id) {
       found = true;
       user.entries++;
