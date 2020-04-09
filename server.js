@@ -16,34 +16,6 @@ const db = knex({
 
 const app = express();
 
-const database = {
-  users: [
-    {
-      id: "123",
-      name: "john",
-      email: "john@gmail.com",
-      password: "cookies",
-      entries: 0,
-      joined: new Date(),
-    },
-    {
-      id: "124",
-      name: "sally",
-      email: "sally@gmail.com",
-      password: "bananas",
-      entries: 0,
-      joined: new Date(),
-    },
-  ],
-  login: [
-    {
-      id: "987",
-      hash: "",
-      email: "john@gmail.com",
-    },
-  ],
-};
-
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -57,14 +29,12 @@ app.post("/signin", (req, res) => {
     .where("email", "=", req.body.email)
     .then((data) => {
       const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
-      console.log(data);
       if (isValid) {
         return db
           .select("*")
           .from("users")
           .where("email", "=", req.body.email)
           .then((user) => {
-            console.log(user);
             res.json(user[0]);
           })
           .catch((err) => res.status(400).json("unable to get user"));
